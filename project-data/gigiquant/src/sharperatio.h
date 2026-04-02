@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 struct Porto {
     double valoare;
@@ -10,3 +11,4 @@ struct Porto {
 typedef struct Porto Porto;
 
 double create_porto(Porto **curr,FILE *input);
+double calculare_volatilitate(Porto *head,double val);

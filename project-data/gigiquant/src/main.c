@@ -6,6 +6,8 @@ int main(int argc, char *argv[]) {
     Porto *head=NULL;
     double rand_med=create_porto(&head,finput);
     fprintf(foutput, "%lf\n", rand_med);
+    double volatilitate=calculare_volatilitate(head,rand_med);
+    fprintf(foutput, "%lf\n", volatilitate);
     fclose(finput);
     fclose(foutput);
     return 0;

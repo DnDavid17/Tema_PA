@@ -26,8 +26,22 @@ double create_porto(Porto **head,FILE *input){
             fscanf(input,"%lf",&val);
             rand_med+=adauga_in_porto(head,val);
         }
-        rand_med=rand_med/(total_nr);
+        rand_med=rand_med/(total_nr-1);
         return rand_med;
     }
     else return 0;
+}
+
+double calculare_volatilitate(Porto *head,double rand_med) {
+    double volatilitate=0;
+    head=head->next;
+    int total_nr=1;
+    while(head!=NULL) {
+        volatilitate+=pow(head->randament-rand_med,2);
+        total_nr++;
+        head=head->next;
+    }
+    volatilitate/=total_nr-1;
+    volatilitate=sqrt(volatilitate);
+    return volatilitate;
 }
