@@ -1,8 +1,12 @@
 #include "sharperatio.h"
 
-double adauga_in_porto(Porto **head,double val) {
+//functie de adaugare elemente la sfarsitului listei
+static double adauga_in_porto(Porto **head,double val) {
     Porto *aux = *head;
     Porto *nou= (Porto*)malloc(sizeof(Porto));
+    if(nou==NULL) {
+        exit(EXIT_FAILURE);
+    }
     nou->valoare=val;
     nou->next=NULL;
     if(*head==NULL) {
@@ -16,10 +20,11 @@ double adauga_in_porto(Porto **head,double val) {
     }
     return nou->randament;
 }
+
+//functie de creare a prtofoliului/listei+calculare randament mediu
 double create_porto(Porto **head,FILE *input){
     int total_nr;
     fscanf(input,"%d",&total_nr);
-    if (total_nr!=0) {
         double rand_med=0;
         for (int cnt=0;cnt<total_nr;cnt++) {
             double val;
@@ -28,10 +33,9 @@ double create_porto(Porto **head,FILE *input){
         }
         rand_med=rand_med/(total_nr-1);
         return rand_med;
-    }
-    else return 0;
 }
 
+//functie de calculare a volatilitatii
 double calculare_volatilitate(Porto *head,double rand_med) {
     double volatilitate=0;
     head=head->next;
@@ -46,6 +50,18 @@ double calculare_volatilitate(Porto *head,double rand_med) {
     return volatilitate;
 }
 
+//functie de trunchiere a numerelor de tip double
 double trunchiere(double valoare) {
     return trunc(valoare*1000.0)/1000.0;
+}
+
+//functie de eliberare a memoriei ocupat anterior de lista
+void elibereaza_porto(Porto **head) {
+    Porto *copie;
+    while(*head!=NULL) {
+        copie=(*head)->next;
+        free(*head);
+        *head=copie;
+    }
+    *head=NULL;
 }

@@ -10,6 +10,7 @@ struct Porto {
 };
 typedef struct Porto Porto;
 
-double create_porto(Porto **curr,FILE *input);
-double calculare_volatilitate(Porto *head,double val);
+double create_porto(Porto **head,FILE *input);
+double calculare_volatilitate(Porto *head,double rand_med);
 double trunchiere(double valoare);
+void elibereaza_porto(Porto **head);

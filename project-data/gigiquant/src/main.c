@@ -1,8 +1,15 @@
 #include "sharperatio.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, const char *argv[]) {
     FILE *finput=fopen(argv[1], "r");
+    if(finput==NULL) {
+        exit(EXIT_FAILURE);
+    }
     FILE *foutput=fopen(argv[2], "w");
+    if(foutput==NULL) {
+        exit(EXIT_FAILURE);
+    }
+
     Porto *head=NULL;
 
     double rand_med=create_porto(&head,finput);
@@ -13,6 +20,9 @@ int main(int argc, char *argv[]) {
 
     double sharpe_ratio=rand_med/volatilitate;
     fprintf(foutput, "%.3lf\n", trunchiere(sharpe_ratio));
+
+    elibereaza_porto(&head);
+
     fclose(finput);
     fclose(foutput);
     return 0;
