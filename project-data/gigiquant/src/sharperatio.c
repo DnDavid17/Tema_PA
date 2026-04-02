@@ -45,3 +45,7 @@ double calculare_volatilitate(Porto *head,double rand_med) {
     volatilitate=sqrt(volatilitate);
     return volatilitate;
 }
+
+double trunchiere(double valoare) {
+    return trunc(valoare*1000.0)/1000.0;
+}
