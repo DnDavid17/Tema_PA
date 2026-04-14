@@ -5,7 +5,7 @@ static double adauga_in_porto(Porto **head,double val) {
     Porto *aux = *head;
     Porto *nou= (Porto*)malloc(sizeof(Porto));
     if(nou==NULL) {
-        exit(EXIT_FAILURE);
+        exit(1);
     }
     nou->valoare=val;
     nou->next=NULL;
