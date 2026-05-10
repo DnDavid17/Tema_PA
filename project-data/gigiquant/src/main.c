@@ -1,5 +1,6 @@
 #include "sharperatio.h"
 #include "arbitraj.h"
+#include "diversificare.h"
 
 int main(int argc, const char *argv[]) {
     FILE *finput=fopen(argv[1], "r");
@@ -45,6 +46,20 @@ int main(int argc, const char *argv[]) {
         free(piata1);
         free(piata2);
         free(piata3);
+    }
+    else if(numar_fisier<=15) {//cazul pentru al treilea task
+        NodArbore *root=(NodArbore*)malloc(sizeof(NodArbore));
+        if (root==NULL) {
+            exit(1);
+        }
+        root->left=NULL;
+        root->right=NULL;
+        root->head=NULL;
+        root->depth=0;
+        creeaza_lista_actiuni(&root->head,finput);
+        creeaza_arbore(&root,finput);
+        afiseaza_oglindit(root,foutput);
+        elibereaza(&root);
     }
     fclose(finput);
     fclose(foutput);

@@ -17,7 +17,7 @@ static int isEmpty(const Node *top) {
 }
 
 //functie de stergere a uni element dintr o stiva
-double pop(Node **top) {
+static double pop(Node **top) {
     Node *temp=*top;
     double aux=temp->pret;
     *top=(*top)->next;
