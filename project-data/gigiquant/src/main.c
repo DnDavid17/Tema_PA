@@ -1,6 +1,7 @@
 #include "sharperatio.h"
 #include "arbitraj.h"
 #include "diversificare.h"
+#include "markov.h"
 
 int main(int argc, const char *argv[]) {
     FILE *finput=fopen(argv[1], "r");
@@ -60,6 +61,29 @@ int main(int argc, const char *argv[]) {
         creeaza_arbore(&root,finput);
         afiseaza_oglindit(root,foutput);
         elibereaza(&root);
+    }
+    else if (numar_fisier<=20){//cazul pentru al patrulea task
+        int nr_observatii,nr_zile;
+        float float_dim,float_start,float_end;
+        fscanf(finput,"%d",&nr_observatii);//numar de observatii de preturi
+        fscanf(finput,"%f",&float_dim);// dimenesiunea intervalelor
+        fscanf(finput,"%d",&nr_zile);//numarul de zile pentru care va fi verificata probabilitatea pentru valoarea de final
+        fscanf(finput,"%f",&float_start);//valoarea de final care se afla in acelasi interval cu prima valoare observata
+        fscanf(finput,"%f",&float_end);//valoarea de final
+
+        graf *graf_Markov=initializare_graf(float_start,float_dim);//alocare de memorie pentru graf si componentele sale
+
+        creeaza_graf(graf_Markov,nr_observatii,float_dim,finput);//crearea matricei de tranzitii
+
+        int rest=(int)float_end%(int)float_dim;
+        simulare_zile(graf_Markov,nr_zile,(int)float_end-rest,foutput);//gasirea probabilitatii pentru fiecare zi
+
+        //eliberare memorie
+        for (int j=0;j<graf_Markov->NR_noduri;j++)
+            free(graf_Markov->mat_de_adiacenta[j]);
+        free(graf_Markov->mat_de_adiacenta);
+        free(graf_Markov->noduri);
+        free(graf_Markov);
     }
     fclose(finput);
     fclose(foutput);
