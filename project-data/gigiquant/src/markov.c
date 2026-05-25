@@ -1,26 +1,27 @@
 #include "markov.h"
 
 graf* initializare_graf(float float_start,float float_dim) {
-    graf *graf_Markov=malloc(sizeof(graf));
+    graf *graf_Markov=malloc(sizeof(graf));//alocare spatiu graf
     if (graf_Markov==NULL) {
         exit(1);
     }
-    graf_Markov->noduri=calloc(1,sizeof(interval));
+    graf_Markov->noduri=calloc(1,sizeof(interval));//alocare spatiu vector care asociaza fiecarui nod o valoare de inceput a starii pe care o reprezinta
+    //si gradul exteriror(pentru a pastra structura de fractie)
     if (graf_Markov->noduri==NULL) {
         exit(1);
     }
     int rest=(int)float_start%(int)float_dim;
     graf_Markov->noduri[0].valoare=(int)float_start-rest;//stiind ca prima valoare observata se afla in acelasi interval cu valoarea de inceput, creez un caz special pentru aceasta
-    graf_Markov->noduri[0].iesiri=-1;
-    graf_Markov->mat_de_adiacenta=malloc(sizeof(int*));
+    graf_Markov->noduri[0].iesiri=-1;//va deveni 0 dupa prima valoare observata
+    graf_Markov->mat_de_adiacenta=malloc(sizeof(int*));//alocare de spatiu pentru prima linie a matricei
     if(graf_Markov->mat_de_adiacenta==NULL) {
         exit(1);
     }
-    *(graf_Markov->mat_de_adiacenta)=calloc(1,sizeof(int));
+    *(graf_Markov->mat_de_adiacenta)=calloc(1,sizeof(int));//alocare de spatiu pentru primul element de pe prima linie
     if (*graf_Markov->mat_de_adiacenta==NULL) {
         exit(1);
     }
-    graf_Markov->mat_de_adiacenta[0][0]=-1;
+    graf_Markov->mat_de_adiacenta[0][0]=-1;//va deveni 0 dupa prima valoare observata
     graf_Markov->NR_noduri=1;
     return graf_Markov;
 }
@@ -32,14 +33,14 @@ void creeaza_graf(graf *graf_Markov,int nr_observatii,float dim_interval,FILE *f
         int ok=0;
         fscanf(finput,"%f",&val_curenta);
         graf_Markov->noduri[poz_curenta].iesiri++;
-        for(int j=0;j<graf_Markov->NR_noduri;j++) {//caz pentru cand o tranzitie se face intre noduri deja create
+        for(int j=0;j<graf_Markov->NR_noduri&&ok==0;j++) {//caz pentru cand o tranzitie se face intre noduri deja create
             if (val_curenta<(float)graf_Markov->noduri[j].valoare+dim_interval && val_curenta>=(float)graf_Markov->noduri[j].valoare) {
                 graf_Markov->mat_de_adiacenta[poz_curenta][j]++;
                 poz_curenta=j;
                 ok=1;
             }
         }
-        if(ok==0) {//ok variabila de control, daca ok=0 intram pe cazul in care trebuie sa cream un nod nou
+        if(ok==0) {//ok - variabila de control, daca ok=0 intram pe cazul in care trebuie sa cream un nod nou
             graf_Markov->NR_noduri++;
             graf_Markov->noduri=realloc(graf_Markov->noduri,graf_Markov->NR_noduri*sizeof(interval));
             if(graf_Markov->noduri==NULL) {
@@ -92,7 +93,7 @@ void simulare_zile(graf *g,int nr_zile,int val_cautata,FILE* foutput) {
     probabilitate_past[0].numarator=1;
     probabilitate_past[0].numitor=1;
     for (int k=0;k<nr_zile;k++) {
-        if (probabilitate_past[ind_final].numarator==0||probabilitate_past[ind_final].numitor==1)//cazul in care un este o fractie probabilitatea
+        if (probabilitate_past[ind_final].numarator==0||probabilitate_past[ind_final].numitor==1)//cazul in care nu este o fractie probabilitatea
             fprintf(foutput,"%d",probabilitate_past[ind_final].numarator);
         else fprintf(foutput,"%d/%d",probabilitate_past[ind_final].numarator,probabilitate_past[ind_final].numitor);
         if (k!=nr_zile-1) fprintf(foutput,"\n");
@@ -107,7 +108,7 @@ void simulare_zile(graf *g,int nr_zile,int val_cautata,FILE* foutput) {
         for (int idx=0;idx<g->NR_noduri;idx++) {//cautarea nodurilor active
             if (probabilitate_past[idx].numarator!=0) {
                 for (int j=0;j<g->NR_noduri;j++) {//cautarea vecinilor nodurilor active
-                    if (g->mat_de_adiacenta[idx][j]!=0) {
+                    if (g->mat_de_adiacenta[idx][j]!=0) {//gasirea unui nod vecin
                         int numarator=g->mat_de_adiacenta[idx][j]*probabilitate_past[idx].numarator;
                         int numitor=g->noduri[idx].iesiri*probabilitate_past[idx].numitor;
                         if (probabilitate_curr[j].numitor==0) {
