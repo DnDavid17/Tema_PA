@@ -2,7 +2,7 @@
 #include "arbitraj.h"
 #include "diversificare.h"
 #include "markov.h"
-
+#include "cJSON.h"
 int main(int argc, const char *argv[]) {
     FILE *finput=fopen(argv[1], "r");
     if(finput==NULL) {
@@ -83,6 +83,9 @@ int main(int argc, const char *argv[]) {
         free(graf_Markov->mat_de_adiacenta);
         free(graf_Markov->noduri);
         free(graf_Markov);
+    }
+    else {//task-ul bonus
+        short_vs_long_term(finput,foutput);
     }
     fclose(finput);
     fclose(foutput);
